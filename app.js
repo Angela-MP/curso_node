@@ -1,4 +1,10 @@
 const express = require ('express');
+require('dotenv').config();
+
 const app = express();
-app.get('/', function(req, res){res.send('Hola Mundo');});
-app.listen(3000);
+
+app.get('/', function(req, res){
+    res.send('Hola Mundo');
+});
+    
+app.listen(process.env.PORT);
