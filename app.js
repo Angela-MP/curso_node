@@ -1,10 +1,4 @@
-const express = require ('express');
-require('dotenv').config();
-
-const app = express();
-
-app.get('/', function(req, res){
-    res.send('Hola Mundo');
-});
-    
-app.listen(process.env.PORT);
+require("dotenv").config();
+const Server = require('./server');
+const server = new Server;
+server.listen();
