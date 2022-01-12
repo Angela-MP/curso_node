@@ -18,4 +18,6 @@ const usuariosQueries = {
         WHERE
             status = 1
     `,
-}
+};
+
+module.exports = usuariosQueries;
