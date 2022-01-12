@@ -18,6 +18,15 @@ const usuariosQueries = {
         WHERE
             status = 1
     `,
+    updateUsuario: `
+        UPDATE
+            usuarios
+        SET
+            nombre=?,
+            status=?
+        WHERE
+            email=?
+    `
 };
 
-module.exports = usuariosQueries;
+module.exports = usuariosQueries; 
