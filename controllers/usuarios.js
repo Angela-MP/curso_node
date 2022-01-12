@@ -1,6 +1,7 @@
 const { request, response } = require("express");
 const pool = require("../db/conexion");
 const usuariosQueries = require("../models/usuarios");
+const bcryptjs = require("bcryptjs");
 
 const usuariosGet = async (req = request, res = response) => {
     
@@ -27,12 +28,16 @@ const usuariosPost = async (req = request, res = response) => {
    let conn;
 
    try{
+
+        const salt = bcryptjs.genSaltSync();
+        const passwordHash = bcryptjs.hashSync(password, salt);
+
         conn = await pool.getConnection();
 
         const usuarios = await conn.query(usuariosQueries.insertUsuario, [
             nombre, 
             email, 
-            password, 
+            passwordHash, 
             status
         ]); 
 
@@ -47,20 +52,20 @@ const usuariosPost = async (req = request, res = response) => {
     }    
 };
 
-const usuariosPut = (req = request, res = response) => {
+const usuariosPut = async (req = request, res = response) => {
     const { email } = req.query;
-    
+    const { nombre, status } = req.body;
+
     let conn;
 
     try{
          conn = await pool.getConnection();
  
-         const usuarios = await conn.query(usuariosQueries.insertUsuario, [
+         const usuarios = await conn.query(usuariosQueries.updateUsuario, [ 
              nombre, 
-             email, 
-             password, 
-             status
-         ]); 
+             status, 
+             email,
+            ]); 
  
          res.json({ usuarios });
      } catch (error) {
@@ -74,9 +79,25 @@ const usuariosPut = (req = request, res = response) => {
     
 };
 
-const usuariosDelete = (req = request, res = response) => { 
-    const {usuario, password} = req.query;
-    res.status(500).json({ msg: "Hola a todos desde DELETE", usuario, password });
+const usuariosDelete = async (req = request, res = response) => { 
+    const { email } = req.query;
+    let conn;
+
+    try{
+         conn = await pool.getConnection();
+         const usuarios = await conn.query(usuariosQueries.deleteUsuario, [email]); 
+ 
+         res.json({ usuarios });
+     } catch (error) {
+         console.log(error);
+         res
+             .status(500)
+             .json({ msg: "Por favor contacte al administrador.", error });
+     } finally {
+         if (conn) conn.end();
+     }  
 };
+
+// Tarea: hacer un endpoint para actualizar la contraseña
 
 module.exports = { usuariosGet, usuariosPost, usuariosPut, usuariosDelete};
