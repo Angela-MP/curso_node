@@ -1,4 +1,4 @@
-const {Router} = require("express");
+const { Router } = require("express");
 const {
     usuariosGet,
     usuariosPost,
@@ -13,5 +13,6 @@ router.get("/", usuariosGet)
 router.post("/", usuariosPost)
 router.put("/", usuariosPut)
 router.delete("/", usuariosDelete)
+router.post("/signin/", usuarioSignIn)
 
 module.exports = router;
